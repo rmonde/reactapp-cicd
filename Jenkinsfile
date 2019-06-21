@@ -35,7 +35,11 @@ pipeline {
                     echo "Deploying the code to s3 bucket - ${bucket}"
                     withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-s3-bucket']]) {
                     sh "aws s3 cp build s3://${bucket} --recursive"
-                    cleanWs() // To clean the workspace
+                    post {
+                      always {
+                        cleanWs() // To clean the workspace
+                      }
+                    }
                     }
                 }
                 failure {
